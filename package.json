@@ -1,0 +1,12 @@
+{
+    "name": "BattlesnakeTester",
+    "version": "0.0.1",
+    "description": "Can be used to test battlesnake server edge cases",
+    "preferGlobal": "true",
+    "main": "main.js",
+    "author": "Devin Corrigall",
+    "dependencies": {
+        "chai-http": "3.0.0",
+        "chai": "4.1.2"
+    }
+}
