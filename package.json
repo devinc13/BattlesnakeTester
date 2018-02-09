@@ -7,6 +7,10 @@
     "author": "Devin Corrigall",
     "dependencies": {
         "chai-http": "3.0.0",
-        "chai": "4.1.2"
+        "chai": "4.1.2",
+        "mocha": "5.0.0"
+    },
+    "scripts": {
+        "test": "mocha"
     }
 }
