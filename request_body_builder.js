@@ -116,7 +116,6 @@ function printBoard(body) {
 
 	// Find your snake id
 	var yourId = body.you.id;
-	console.log(yourId);
 
 	// Add snakes
 	for (var i = 0; i < body.snakes.data.length; i++) {
