@@ -1,5 +1,5 @@
 // Before using this body, you need to add at least one food, and at least one snake (yourself)
-function getEmptyRequestBody() {
+function getEmptyRequestBody(width = 20, height = 20, turn = 0) {
 	var body = {};
 	body["food"] = {
 		"data": [],
@@ -14,9 +14,9 @@ function getEmptyRequestBody() {
 	body["you"] = {};
 
 	// Set default values
-	body["height"] = 20;
-	body["width"] = 20;
-	body["turn"] = 0;
+	body["height"] = width;
+	body["width"] = height;
+	body["turn"] = turn;
 	body["id"] = 1;
 	body["object"] = "world";
 	return body;
@@ -97,9 +97,48 @@ function addYou(body, snakeCoords, health = 100, name = makeRandomString(), id =
 	body["you"] = yourSnake;
 }
 
+function printBoard(body) {
+	var board = [];
+	for (var i = 0; i < body.height; i++) {
+		var row = [];
+		for (var j = 0; j < body.width; j++) {
+			row.push('-');
+		}
+		board.push(row);
+	}
+
+	for (var i = 0; i < body.food.data.length; i++) {
+		var food = body.food.data[i];
+		board[food.x][food.y] = 'F';
+	}
+
+	for (var i = 0; i < body.snakes.data.length; i++) {
+		var snake = body.snakes.data[i];
+		for(var j = 0; j < snake.length; j++) {
+			var coord = snake.body.data[j];
+			if (j == 0) {
+				board[coord.x][coord.y] = 'h';	
+			} else {
+				board[coord.x][coord.y] = 's';	
+			}
+		}
+	}
+
+	// Print board
+	for (var i = 0; i < body.width; i++) {
+		for (var j = 0; j < body.height; j++) {
+			// Don't put a newline
+			process.stdout.write(board[j][i] + ' ');
+		}
+
+		process.stdout.write('\n');
+	}
+}
+
 module.exports = {
    getEmptyRequestBody: getEmptyRequestBody,
    addFood: addFood,
    addSnake: addSnake,
-   addYou: addYou
+   addYou: addYou,
+   printBoard: printBoard
 }
