@@ -230,3 +230,24 @@ it('should avoid the head of another longer snake', function(done) {
 			done();
 		});
 });
+
+// Test one of Shiffany's deaths
+it('should avoid dead end food', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 10, 5);
+	requestBodyBuilder.addFood(requestBody, 13, 3);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 10, "y": 2}, {"x": 9, "y": 2}, {"x": 9, "y": 3}, {"x": 9, "y": 4}, {"x": 9, "y": 5}, {"x": 9, "y": 6}, {"x": 9, "y": 7}, {"x": 10, "y": 7}, {"x": 10, "y": 8}, {"x": 11, "y": 8}, {"x": 12, "y": 8}, {"x": 13, "y": 8}, {"x": 14, "y": 8}, {"x": 15, "y": 8}], 30);
+	requestBodyBuilder.addYou(requestBody, [{"x": 10, "y": 4}, {"x": 11, "y": 4}, {"x": 11, "y": 5}, {"x": 11, "y": 6}, {"x": 12, "y": 6}, {"x": 12, "y": 5}, {"x": 12, "y": 4}, {"x": 12, "y": 3}]);
+	console.log("\n\n");
+	requestBodyBuilder.printBoard(requestBody);
+
+	chai.request('http://' + host + ':' + port)
+		.post('/move')
+		.send(requestBody)
+		.end(function (err, res) {
+			expect(err).to.be.null;
+			expect(res).to.have.status(200);
+			expect(res.body).to.have.property('move').with.equal('up');
+			done();
+		});
+});

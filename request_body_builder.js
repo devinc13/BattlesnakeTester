@@ -98,6 +98,7 @@ function addYou(body, snakeCoords, health = 100, name = makeRandomString(), id =
 }
 
 function printBoard(body) {
+	// Create board
 	var board = [];
 	for (var i = 0; i < body.height; i++) {
 		var row = [];
@@ -107,19 +108,34 @@ function printBoard(body) {
 		board.push(row);
 	}
 
+	// Add food
 	for (var i = 0; i < body.food.data.length; i++) {
 		var food = body.food.data[i];
 		board[food.x][food.y] = 'F';
 	}
 
+	// Find your snake id
+	var yourId = body.you.id;
+	console.log(yourId);
+
+	// Add snakes
 	for (var i = 0; i < body.snakes.data.length; i++) {
 		var snake = body.snakes.data[i];
 		for(var j = 0; j < snake.length; j++) {
 			var coord = snake.body.data[j];
+			// Print your snake differently
 			if (j == 0) {
-				board[coord.x][coord.y] = 'h';	
+				if (snake.id == yourId) {
+					board[coord.x][coord.y] = 'y';
+				} else {
+					board[coord.x][coord.y] = 'e';
+				}
 			} else {
-				board[coord.x][coord.y] = 's';	
+				if (snake.id == yourId) {
+					board[coord.x][coord.y] = '*';
+				} else {
+					board[coord.x][coord.y] = '#';
+				}
 			}
 		}
 	}
