@@ -251,3 +251,22 @@ it('should avoid dead end food', function(done) {
 			done();
 		});
 });
+
+it('should avoid a corner when growing tail will get in the way (2x on tail)', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 19, 0);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 0, "y": 0}, {"x": 0, "y": 1}, {"x": 0, "y": 2}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 19, "y": 1}, {"x": 18, "y": 1}, {"x": 18, "y": 0}, {"x": 18, "y": 0}]);
+	console.log("\n\n");
+	requestBodyBuilder.printBoard(requestBody);
+
+	chai.request('http://' + host + ':' + port)
+		.post('/move')
+		.send(requestBody)
+		.end(function (err, res) {
+			expect(err).to.be.null;
+			expect(res).to.have.status(200);
+			expect(res.body).to.have.property('move').with.equal('down');
+			done();
+		});
+});
