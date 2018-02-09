@@ -1,5 +1,3 @@
 # BattlesnakeTester
 
-To run tests: `npm test`
-
-TODO: Make address and port editable
+To run tests: `npm --host=localhost --port=8000 run test`
