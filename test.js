@@ -65,8 +65,9 @@ it('should handle small spaces (flood fill)', function(done) {
 it('should handle small spaces V2 (flood fill)', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(10, 10);
 	requestBodyBuilder.addFood(requestBody, 9, 0);
+	requestBodyBuilder.addFood(requestBody, 0, 0);
 	requestBodyBuilder.addSnake(requestBody, [{"x": 2, "y": 6}, {"x": 1, "y": 6}, {"x": 0, "y": 6}]);
-	requestBodyBuilder.addYou(requestBody, [{"x": 8, "y": 0}, {"x": 8, "y": 1}, {"x": 8, "y": 2}, {"x": 8, "y": 3}, {"x": 8, "y": 4}, {"x": 8, "y": 5}, {"x": 8, "y": 6}, {"x": 8, "y": 7}, {"x": 8, "y": 8}, {"x": 8, "y": 9}, {"x": 7, "y": 9}, {"x": 6, "y": 9}, {"x": 5, "y": 9}, {"x": 4, "y": 9}, {"x": 3, "y": 9}, {"x": 2, "y": 9}, {"x": 1, "y": 9}, {"x": 0, "y": 9}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 8, "y": 0}, {"x": 8, "y": 1}, {"x": 8, "y": 2}, {"x": 8, "y": 3}, {"x": 8, "y": 4}, {"x": 8, "y": 5}, {"x": 8, "y": 6}, {"x": 8, "y": 7}, {"x": 8, "y": 8}, {"x": 8, "y": 9}, {"x": 7, "y": 9}, {"x": 6, "y": 9}, {"x": 5, "y": 9}, {"x": 4, "y": 9}, {"x": 3, "y": 9}, {"x": 2, "y": 9}, {"x": 1, "y": 9}, {"x": 0, "y": 9}, {"x": 0, "y": 8}, {"x": 1, "y": 8}, {"x": 2, "y": 8}, {"x": 3, "y": 8}]);
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
@@ -267,6 +268,27 @@ it('should avoid a corner when growing tail will get in the way (2x on tail)', f
 			expect(err).to.be.null;
 			expect(res).to.have.status(200);
 			expect(res.body).to.have.property('move').with.equal('down');
+			done();
+		});
+});
+
+// Test another of Shiffany's deaths
+it('should not take a dangerous move at the start', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 8, 13);
+	requestBodyBuilder.addFood(requestBody, 10, 17);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 8, "y": 8}, {"x": 7, "y": 8}, {"x": 7, "y": 8}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 7, "y": 9}, {"x": 7, "y": 10}, {"x": 7, "y": 10}]);
+	console.log("\n\n");
+	requestBodyBuilder.printBoard(requestBody);
+
+	chai.request('http://' + host + ':' + port)
+		.post('/move')
+		.send(requestBody)
+		.end(function (err, res) {
+			expect(err).to.be.null;
+			expect(res).to.have.status(200);
+			expect(res.body).to.have.property('move').with.equal('left');
 			done();
 		});
 });
