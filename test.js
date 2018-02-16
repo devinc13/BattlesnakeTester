@@ -46,7 +46,7 @@ it('should return a move (any move)', function(done) {
 it('should handle small spaces (flood fill)', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
 	requestBodyBuilder.addFood(requestBody, 7, 19);
-	requestBodyBuilder.addSnake(requestBody, [{"x": 10, "y": 18}, {"x": 9, "y": 18}, {"x": 8, "y": 18}, {"x": 7, "y": 18}, {"x": 6, "y": 18}, {"x": 5, "y": 18}, {"x": 4, "y": 18}, {"x": 3, "y": 18}, {"x": 2, "y": 18}, {"x": 1, "y": 18}, {"x": 0, "y": 18}, {"x": 0, "y": 17}, {"x": 0, "y": 16}, {"x": 0, "y": 15}, {"x": 0, "y": 14}, {"x": 0, "y": 13}, {"x": 0, "y": 12}, {"x": 0, "y": 11}]);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 10, "y": 18}, {"x": 9, "y": 18}, {"x": 8, "y": 18}, {"x": 7, "y": 18}, {"x": 6, "y": 18}, {"x": 5, "y": 18}, {"x": 4, "y": 18}, {"x": 3, "y": 18}, {"x": 2, "y": 18}, {"x": 1, "y": 18}, {"x": 0, "y": 18}, {"x": 0, "y": 17}, {"x": 0, "y": 16}, {"x": 0, "y": 15}, {"x": 0, "y": 14}, {"x": 0, "y": 13}, {"x": 0, "y": 12}, {"x": 0, "y": 11}, {"x": 0, "y": 10}, {"x": 0, "y": 9}, {"x": 0, "y": 8}, {"x": 0, "y": 7}, {"x": 0, "y": 6}, {"x": 0, "y": 5}, {"x": 0, "y": 4}, {"x": 0, "y": 3}, {"x": 0, "y": 2}, {"x": 0, "y": 1}, {"x": 0, "y": 0}]);
 	requestBodyBuilder.addYou(requestBody, [{"x": 11, "y": 19}, {"x": 11, "y": 18}, {"x": 11, "y": 17}]);
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
@@ -279,6 +279,28 @@ it('should not take a dangerous move at the start', function(done) {
 	requestBodyBuilder.addFood(requestBody, 10, 17);
 	requestBodyBuilder.addSnake(requestBody, [{"x": 8, "y": 8}, {"x": 7, "y": 8}, {"x": 7, "y": 8}]);
 	requestBodyBuilder.addYou(requestBody, [{"x": 7, "y": 9}, {"x": 7, "y": 10}, {"x": 7, "y": 10}]);
+	console.log("\n\n");
+	requestBodyBuilder.printBoard(requestBody);
+
+	chai.request('http://' + host + ':' + port)
+		.post('/move')
+		.send(requestBody)
+		.end(function (err, res) {
+			expect(err).to.be.null;
+			expect(res).to.have.status(200);
+			expect(res.body).to.have.property('move').with.equal('left');
+			done();
+		});
+});
+
+// Test one of Shiffany's deaths
+it('should avoid the head of a longer snake', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 3, 13);
+	requestBodyBuilder.addFood(requestBody, 11, 18);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 8, "y": 13}, {"x": 7, "y": 13}, {"x": 7, "y": 14}, {"x": 7, "y": 15}, {"x": 6, "y": 15}, {"x": 6, "y": 16}, {"x": 5, "y": 16}, {"x": 5, "y": 15}, {"x": 5, "y": 14}, {"x": 5, "y": 13}, {"x": 5, "y": 12}, {"x": 5, "y": 11}, {"x": 6, "y": 11}, {"x": 7, "y": 11}, {"x": 7, "y": 12}, {"x": 6, "y": 12}]);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 8, "y": 10}, {"x": 9, "y": 10}, {"x": 9, "y": 9}, {"x": 10, "y": 9}, {"x": 10, "y": 8}, {"x": 10, "y": 7}, {"x": 10, "y": 6}, {"x": 10, "y": 5}, {"x": 10, "y": 4}, {"x": 10, "y": 3}, {"x": 10, "y": 2}, {"x": 10, "y": 1}, {"x": 11, "y": 1}, {"x": 12, "y": 1}, {"x": 12, "y": 0}, {"x": 11, "y": 0}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 7, "y": 9}, {"x": 7, "y": 8}, {"x": 7, "y": 7}, {"x": 7, "y": 6}, {"x": 7, "y": 5}, {"x": 7, "y": 4}, {"x": 7, "y": 3}, {"x": 6, "y": 3}, {"x": 6, "y": 2}, {"x": 7, "y": 2}, {"x": 8, "y": 2}, {"x": 8, "y": 3}, {"x": 8, "y": 4}, {"x": 8, "y": 5}, {"x": 8, "y": 6}]);
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
