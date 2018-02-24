@@ -7,10 +7,17 @@ const requestBodyBuilder = require('./request_body_builder');
 const host = process.env.npm_config_host;
 const port = process.env.npm_config_port;
 
+var url = '';
+if (port) {
+	url = 'http://' + host + ':' + port;
+} else {
+	url = 'http://' + host;
+}
+
 
 it('should handle start request', function(done) {
 	console.log("No board");
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/start')
 		.send({ "game_id": 1 })
 		.end(function (err, res) {
@@ -31,7 +38,7 @@ it('should return a move (any move)', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -51,7 +58,7 @@ it('should handle small spaces (flood fill)', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -71,7 +78,7 @@ it('should handle small spaces V2 (flood fill)', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -95,7 +102,7 @@ it('should eat dangerous food to not die at 2hp (THIS IS HARD)', function(done) 
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -118,7 +125,7 @@ it('should eat food beside you at 1hp', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -141,7 +148,7 @@ it('should eat food beside you at 1hp with enemy snake around', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -161,7 +168,7 @@ it('should not move into a space behind a tail that is about to grow', function(
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -181,7 +188,7 @@ it('should not kill itself when scared of another shorter snake', function(done)
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -201,7 +208,7 @@ it('should not kill itself when scared of another longer snake', function(done) 
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -221,7 +228,7 @@ it('should avoid the head of another longer snake', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -242,7 +249,7 @@ it('should avoid dead end food', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -261,7 +268,7 @@ it('should avoid a corner when growing tail will get in the way (2x on tail)', f
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -282,7 +289,7 @@ it('should not take a dangerous move at the start', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -304,7 +311,7 @@ it('should avoid the head of a longer snake', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -324,7 +331,7 @@ it('should avoid very dangerous food if at full health', function(done) {
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
@@ -343,7 +350,7 @@ it('should eat very dangerous food if about to die and there is a chance of livi
 	console.log("\n\n");
 	requestBodyBuilder.printBoard(requestBody);
 
-	chai.request('http://' + host + ':' + port)
+	chai.request(url)
 		.post('/move')
 		.send(requestBody)
 		.end(function (err, res) {
