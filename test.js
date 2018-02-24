@@ -314,3 +314,42 @@ it('should avoid the head of a longer snake', function(done) {
 			done();
 		});
 });
+
+
+it('should avoid very dangerous food if at full health', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 0, 19);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 2, "y": 19}, {"x": 3, "y": 19}, {"x": 4, "y": 19}, {"x": 5, "y": 19}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 0, "y": 18}, {"x": 0, "y": 17}, {"x": 1, "y": 17}, {"x": 1, "y": 16}, {"x": 1, "y": 15}, {"x": 1, "y": 14}]);
+	console.log("\n\n");
+	requestBodyBuilder.printBoard(requestBody);
+
+	chai.request('http://' + host + ':' + port)
+		.post('/move')
+		.send(requestBody)
+		.end(function (err, res) {
+			expect(err).to.be.null;
+			expect(res).to.have.status(200);
+			expect(res.body).to.have.property('move').with.equal('right');
+			done();
+		});
+});
+
+it('should eat very dangerous food if about to die and there is a chance of living', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 0, 19);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 2, "y": 19}, {"x": 3, "y": 19}, {"x": 4, "y": 19}, {"x": 5, "y": 19}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 0, "y": 18}, {"x": 0, "y": 17}, {"x": 1, "y": 17}, {"x": 1, "y": 16}, {"x": 1, "y": 15}, {"x": 1, "y": 14}], 1);
+	console.log("\n\n");
+	requestBodyBuilder.printBoard(requestBody);
+
+	chai.request('http://' + host + ':' + port)
+		.post('/move')
+		.send(requestBody)
+		.end(function (err, res) {
+			expect(err).to.be.null;
+			expect(res).to.have.status(200);
+			expect(res.body).to.have.property('move').with.equal('down');
+			done();
+		});
+});

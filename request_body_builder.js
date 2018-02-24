@@ -139,6 +139,9 @@ function printBoard(body) {
 		}
 	}
 
+	// Print how much health you have
+	console.log("You have " + body["you"]["health"] + " health.");
+
 	// Print board
 	for (var i = 0; i < body.width; i++) {
 		for (var j = 0; j < body.height; j++) {
