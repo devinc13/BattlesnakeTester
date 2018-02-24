@@ -39,7 +39,6 @@ it('should handle start request', function(done) {
 		});
 });
 
-
 it('should return a move (any move)', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(25, 15);
 	requestBodyBuilder.addFood(requestBody, 7, 19);
@@ -55,7 +54,6 @@ it('should return a move (any move)', function(done) {
 
 	sendMoveRequest(requestBody, responseHandler);
 });
-
 
 it('should handle small spaces (flood fill)', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
@@ -167,7 +165,6 @@ it('should not move into a space behind a tail that is about to grow', function(
 
 	sendMoveRequest(requestBody, responseHandler);
 });
-
 
 it('should not kill itself when scared of another shorter snake', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
@@ -289,7 +286,6 @@ it('should avoid the head of a longer snake', function(done) {
 
 	sendMoveRequest(requestBody, responseHandler);
 });
-
 
 it('should avoid very dangerous food if at full health', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
