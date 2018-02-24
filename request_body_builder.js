@@ -140,7 +140,7 @@ function printBoard(body) {
 	}
 
 	// Print how much health you have
-	console.log("You have " + body["you"]["health"] + " health.");
+	console.log("\n\nYou have " + body["you"]["health"] + " health.");
 
 	// Print board
 	for (var i = 0; i < body.width; i++) {
@@ -149,7 +149,8 @@ function printBoard(body) {
 			process.stdout.write(board[j][i] + ' ');
 		}
 
-		process.stdout.write('\n');
+		// Just a newline
+		console.log('');
 	}
 }
 
