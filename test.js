@@ -334,3 +334,19 @@ it('should make a move to stay alive even if death in a couple turns is unavoida
 
 	sendMoveRequest(requestBody, responseHandler);
 });
+
+it('should recognise the tail will make space for it to move', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 0, 19);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 0, "y": 0}, {"x": 0, "y": 1}, {"x": 0, "y": 2}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 6, "y": 6}, {"x": 5, "y": 6}, {"x": 5, "y": 7}, {"x": 5, "y": 8}, {"x": 5, "y": 9}, {"x": 5, "y": 10}, {"x": 5, "y": 11}, {"x": 5, "y": 12}, {"x": 6, "y": 12}, {"x": 7, "y": 12}, {"x": 7, "y": 11}, {"x": 7, "y": 10}, {"x": 7, "y": 9}, {"x": 7, "y": 8}, {"x": 7, "y": 7}, {"x": 8, "y": 7}, {"x": 8, "y": 6}, {"x": 9, "y": 6}, {"x": 9, "y": 5}, {"x": 9, "y": 4}, {"x": 8, "y": 4}, {"x": 7, "y": 4}, {"x": 6, "y": 4}, {"x": 5, "y": 4}, {"x": 5, "y": 5}, {"x": 6, "y": 5}]);
+	requestBodyBuilder.printBoard(requestBody);
+
+	var responseHandler = function (err, res) {
+		checkForGoodResponse(err, res);
+		expect(res.body).to.have.property('move').with.not.equal('down');
+		done();
+	};
+
+	sendMoveRequest(requestBody, responseHandler);
+});
