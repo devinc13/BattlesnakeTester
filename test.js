@@ -27,7 +27,6 @@ function sendMoveRequest(requestBody, responseHandler) {
 }
 
 it('should handle start request', function(done) {
-	console.log("No board");
 	chai.request(url)
 		.post('/start')
 		.send({ "game_id": 1 })
@@ -290,7 +289,7 @@ it('should avoid the head of a longer snake', function(done) {
 it('should avoid very dangerous food if at full health', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
 	requestBodyBuilder.addFood(requestBody, 0, 19);
-	requestBodyBuilder.addSnake(requestBody, [{"x": 2, "y": 19}, {"x": 3, "y": 19}, {"x": 4, "y": 19}, {"x": 5, "y": 19}]);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 2, "y": 19}, {"x": 3, "y": 19}, {"x": 4, "y": 19}, {"x": 5, "y": 19}], 50);
 	requestBodyBuilder.addYou(requestBody, [{"x": 0, "y": 18}, {"x": 0, "y": 17}, {"x": 1, "y": 17}, {"x": 1, "y": 16}, {"x": 1, "y": 15}, {"x": 1, "y": 14}]);
 	requestBodyBuilder.printBoard(requestBody);
 
@@ -308,6 +307,23 @@ it('should eat very dangerous food if about to die and there is a chance of livi
 	requestBodyBuilder.addFood(requestBody, 0, 19);
 	requestBodyBuilder.addSnake(requestBody, [{"x": 2, "y": 19}, {"x": 3, "y": 19}, {"x": 4, "y": 19}, {"x": 5, "y": 19}]);
 	requestBodyBuilder.addYou(requestBody, [{"x": 0, "y": 18}, {"x": 0, "y": 17}, {"x": 1, "y": 17}, {"x": 1, "y": 16}, {"x": 1, "y": 15}, {"x": 1, "y": 14}], 1);
+	requestBodyBuilder.printBoard(requestBody);
+
+	var responseHandler = function (err, res) {
+		checkForGoodResponse(err, res);
+		expect(res.body).to.have.property('move').with.equal('down');
+		done();
+	};
+
+	sendMoveRequest(requestBody, responseHandler);
+});
+
+// Just in case another snake dies during those turns!
+it('should make a move to stay alive even if death in a couple turns is unavoidable', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 0, 19);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 15, "y": 19}, {"x": 16, "y": 19}, {"x": 17, "y": 19}, {"x": 18, "y": 19}, {"x": 18, "y": 18}, {"x": 18, "y": 17}, {"x": 18, "y": 16}, {"x": 18, "y": 15}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 19, "y": 17}, {"x": 19, "y": 16}, {"x": 19, "y": 15}, {"x": 19, "y": 14}, {"x": 19, "y": 13}]);
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
