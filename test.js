@@ -4,34 +4,17 @@ var chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 var expect = chai.expect;
 const requestBodyBuilder = require('./request_body_builder');
-const host = process.env.npm_config_host;
-const port = process.env.npm_config_port;
+const testHelper = require('./test_helper');
 
-var url = '';
-if (port) {
-	url = 'http://' + host + ':' + port;
-} else {
-	url = 'http://' + host;
-}
+var url = testHelper.getUrl();
 
-function checkForGoodResponse(err, res) {
-	expect(err).to.be.null;
-	expect(res).to.have.status(200);
-}
-
-function sendMoveRequest(requestBody, responseHandler) {
-	chai.request(url)
-		.post('/move')
-		.send(requestBody)
-		.end(responseHandler);
-}
 
 it('should handle start request', function(done) {
 	chai.request(url)
 		.post('/start')
 		.send({ "game_id": 1 })
 		.end(function (err, res) {
-			checkForGoodResponse(err, res);
+			testHelper.checkForGoodResponse(err, res);
 			expect(res.body).to.have.property('name');
 			expect(res.body).to.have.property('head_url');
 			done();
@@ -46,12 +29,12 @@ it('should return a move (any move)', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 it('should handle small spaces (flood fill)', function(done) {
@@ -62,12 +45,12 @@ it('should handle small spaces (flood fill)', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('right');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 it('should handle small spaces V2 (flood fill)', function(done) {
@@ -79,33 +62,12 @@ it('should handle small spaces V2 (flood fill)', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('left');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
-});
-
-// https://rdbrck.slack.com/files/U8W0KQTUY/F95N8SM4Y/screen_shot_2018-02-08_at_3.59.16_pm.png
-// Your snake has 2hp
-it('should eat dangerous food to not die at 2hp (THIS IS HARD)', function(done) {
-	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
-	requestBodyBuilder.addFood(requestBody, 1, 6);
-	requestBodyBuilder.addFood(requestBody, 2, 14);
-	requestBodyBuilder.addFood(requestBody, 4, 19);
-	requestBodyBuilder.addFood(requestBody, 5, 8);
-	requestBodyBuilder.addSnake(requestBody, [{"x": 0, "y": 0}, {"x": 0, "y": 1}, {"x": 0, "y": 2}]);
-	requestBodyBuilder.addYou(requestBody, [{"x": 4, "y": 8}, {"x": 4, "y": 9}, {"x": 5, "y": 9}, {"x": 6, "y": 9}, {"x": 6, "y": 8}, {"x": 7, "y": 8}, {"x": 7, "y": 7}, {"x": 7, "y": 6}, {"x": 7, "y": 5}, {"x": 7, "y": 4}, {"x": 7, "y": 3}, {"x": 7, "y": 2}, {"x": 6, "y": 2}, {"x": 6, "y": 3}, {"x": 5, "y": 3}, {"x": 4, "y": 3}, {"x": 4, "y": 4}, {"x": 5, "y": 4}, {"x": 5, "y": 5}, {"x": 4, "y": 5}, {"x": 4, "y": 6}, {"x": 4, "y": 7}, {"x": 3, "y": 7}], 2);
-	requestBodyBuilder.printBoard(requestBody);
-
-	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('right');
-		done();
-	};
-
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 // Your snake has 1hp, food right beside it (test for slither dying in a weird way)
@@ -120,12 +82,12 @@ it('should eat food beside you at 1hp', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('left');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 // Your snake has 1hp, food right beside it, and an enemy snake (test for slither dying in a weird way)
@@ -140,12 +102,12 @@ it('should eat food beside you at 1hp with enemy snake around', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('left');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 // Test for chasing tail after eating food
@@ -157,12 +119,12 @@ it('should not move into a space behind a tail that is about to grow', function(
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.not.equal('up');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 it('should not kill itself when scared of another shorter snake', function(done) {
@@ -173,13 +135,13 @@ it('should not kill itself when scared of another shorter snake', function(done)
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.not.equal('up');
 		expect(res.body).to.have.property('move').with.not.equal('left');		
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 it('should not kill itself when scared of another longer snake', function(done) {
@@ -190,13 +152,13 @@ it('should not kill itself when scared of another longer snake', function(done) 
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.not.equal('up');
 		expect(res.body).to.have.property('move').with.not.equal('left');		
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 it('should avoid the head of another longer snake', function(done) {
@@ -207,12 +169,12 @@ it('should avoid the head of another longer snake', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('left');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 // Test one of Shiffany's deaths
@@ -225,12 +187,12 @@ it('should avoid dead end food', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('up');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 it('should avoid a corner when growing tail will get in the way (2x on tail)', function(done) {
@@ -241,12 +203,12 @@ it('should avoid a corner when growing tail will get in the way (2x on tail)', f
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('down');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 // Test another of Shiffany's deaths
@@ -259,12 +221,12 @@ it('should not take a dangerous move at the start', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('left');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 // Test one of Shiffany's deaths
@@ -278,28 +240,12 @@ it('should avoid the head of a longer snake', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('left');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
-});
-
-it('should avoid very dangerous food if at full health', function(done) {
-	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
-	requestBodyBuilder.addFood(requestBody, 0, 19);
-	requestBodyBuilder.addSnake(requestBody, [{"x": 2, "y": 19}, {"x": 3, "y": 19}, {"x": 4, "y": 19}, {"x": 5, "y": 19}], 50);
-	requestBodyBuilder.addYou(requestBody, [{"x": 0, "y": 18}, {"x": 0, "y": 17}, {"x": 1, "y": 17}, {"x": 1, "y": 16}, {"x": 1, "y": 15}, {"x": 1, "y": 14}]);
-	requestBodyBuilder.printBoard(requestBody);
-
-	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('right');
-		done();
-	};
-
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 it('should eat very dangerous food if about to die and there is a chance of living', function(done) {
@@ -310,12 +256,12 @@ it('should eat very dangerous food if about to die and there is a chance of livi
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('down');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 // Just in case another snake dies during those turns!
@@ -327,12 +273,12 @@ it('should make a move to stay alive even if death in a couple turns is unavoida
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.equal('down');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
 it('should recognise the tail will make space for it to move', function(done) {
@@ -343,10 +289,10 @@ it('should recognise the tail will make space for it to move', function(done) {
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
-		checkForGoodResponse(err, res);
+		testHelper.checkForGoodResponse(err, res);
 		expect(res.body).to.have.property('move').with.not.equal('down');
 		done();
 	};
 
-	sendMoveRequest(requestBody, responseHandler);
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
