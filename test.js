@@ -296,3 +296,35 @@ it('should recognise the tail will make space for it to move', function(done) {
 
 	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
+
+it('should not get food when tail growth will kill it', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 10, 10);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 0, "y": 0}, {"x": 0, "y": 1}, {"x": 0, "y": 2}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 10, "y": 11}, {"x": 11, "y": 11}, {"x": 11, "y": 10}, {"x": 12, "y": 10}, {"x": 13, "y": 10}, {"x": 14, "y": 10}, {"x": 14, "y": 9}, {"x": 14, "y": 8}, {"x": 13, "y": 8}, {"x": 12, "y": 8}, {"x": 11, "y": 8}, {"x": 11, "y": 9}, {"x": 10, "y": 9}, {"x": 9, "y": 9}, {"x": 8, "y": 9}, {"x": 8, "y": 10}, {"x": 9, "y": 10}, {"x": 9, "y": 11}]);
+	requestBodyBuilder.printBoard(requestBody);
+
+	var responseHandler = function (err, res) {
+		testHelper.checkForGoodResponse(err, res);
+		expect(res.body).to.have.property('move').with.not.equal('up');
+		done();
+	};
+
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
+});
+
+it('should eat food that is not actually dangerous if low on health', function(done) {
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+	requestBodyBuilder.addFood(requestBody, 7, 2);
+	requestBodyBuilder.addSnake(requestBody, [{"x": 0, "y": 3}, {"x": 0, "y": 2}, {"x": 1, "y": 2}, {"x": 2, "y": 2}, {"x": 3, "y": 2}, {"x": 3, "y": 3}, {"x": 4, "y": 3}, {"x": 4, "y": 2}, {"x": 5, "y": 2}, {"x": 5, "y": 1}, {"x": 6, "y": 1}, {"x": 7, "y": 1}, {"x": 8, "y": 1}, {"x": 8, "y": 2}, {"x": 9, "y": 2}, {"x": 9, "y": 1}, {"x": 9, "y": 0}, {"x": 10, "y": 0}, {"x": 10, "y": 1}, {"x": 10, "y": 2}, {"x": 10, "y": 3}, {"x": 9, "y": 3}, {"x": 9, "y": 4}, {"x": 9, "y": 5}, {"x": 9, "y": 6}, {"x": 9, "y": 7}, {"x": 9, "y": 8}, {"x": 8, "y": 8}, {"x": 8, "y": 7}, {"x": 7, "y": 7}, {"x": 7, "y": 8}, {"x": 7, "y": 9}, {"x": 7, "y": 10}, {"x": 7, "y": 11}, {"x": 7, "y": 12}, {"x": 7, "y": 13}, {"x": 7, "y": 14}, {"x": 7, "y": 15}, {"x": 7, "y": 16}, {"x": 7, "y": 17}, {"x": 7, "y": 18}, {"x": 7, "y": 19}, {"x": 8, "y": 19}, {"x": 8, "y": 18}, {"x": 8, "y": 17}, {"x": 8, "y": 16}, {"x": 8, "y": 15}, {"x": 8, "y": 14}, {"x": 8, "y": 13}, {"x": 8, "y": 12}]);
+	requestBodyBuilder.addYou(requestBody, [{"x": 7, "y": 3}, {"x": 7, "y": 4}, {"x": 6, "y": 4}, {"x": 6, "y": 5}, {"x": 6, "y": 6}, {"x": 6, "y": 7}, {"x": 6, "y": 8}, {"x": 6, "y": 9}, {"x": 6, "y": 10}, {"x": 6, "y": 11}, {"x": 5, "y": 11}, {"x": 5, "y": 10}, {"x": 4, "y": 10}, {"x": 4, "y": 9}, {"x": 3, "y": 9}, {"x": 3, "y": 8}, {"x": 3, "y": 7}, {"x": 3, "y": 6}, {"x": 3, "y": 5}, {"x": 2, "y": 5}, {"x": 1, "y": 5}, {"x": 1, "y": 4}, {"x": 1, "y": 3}, {"x": 2, "y": 3}, {"x": 2, "y": 4}, {"x": 3, "y": 4}, {"x": 4, "y": 4}, {"x": 5, "y": 4}, {"x": 5, "y": 3}, {"x": 6, "y": 3}], 5);
+	requestBodyBuilder.printBoard(requestBody);
+
+	var responseHandler = function (err, res) {
+		testHelper.checkForGoodResponse(err, res);
+		expect(res.body).to.have.property('move').with.equal('up');
+		done();
+	};
+
+	testHelper.sendMoveRequest(url, requestBody, responseHandler);
+});
