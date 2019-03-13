@@ -10,19 +10,24 @@ var url = testHelper.getUrl();
 
 
 it('should handle start request', function(done) {
-	chai.request(url)
+
+
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(25, 15);
+
+	var responseHandler = function (err, res) {
+		testHelper.checkForGoodResponse(err, res);
+		done();
+	};
+
+    chai.request(url)
 		.post('/start')
-		.send({ "game_id": 1 })
-		.end(function (err, res) {
-			testHelper.checkForGoodResponse(err, res);
-			expect(res.body).to.have.property('name');
-			expect(res.body).to.have.property('head_url');
-			done();
-		});
+		.send(requestBody)
+		.end(responseHandler);
+
 });
 
 it('should return a move (any move)', function(done) {
-	var requestBody = requestBodyBuilder.getEmptyRequestBody(25, 15);
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(15, 15);
 	requestBodyBuilder.addFood(requestBody, 7, 19);
 	requestBodyBuilder.addSnake(requestBody, [{"x": 7, "y": 8}, {"x": 6, "y": 8}, {"x": 5, "y": 8}]);
 	requestBodyBuilder.addYou(requestBody, [{"x": 11, "y": 11}, {"x": 11, "y": 12}, {"x": 11, "y": 13}]);
