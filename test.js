@@ -125,7 +125,7 @@ it('should not move into a space behind a tail that is about to grow', function(
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
 		done();
 	};
 
@@ -141,7 +141,7 @@ it('should not kill itself when scared of another shorter snake', function(done)
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
 		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('left');		
 		done();
 	};
@@ -158,7 +158,7 @@ it('should not kill itself when scared of another longer snake', function(done) 
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
 		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('left');		
 		done();
 	};
@@ -193,7 +193,7 @@ it('should avoid dead end food', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('down');
 		done();
 	};
 
@@ -209,7 +209,7 @@ it('should avoid a corner when growing tail will get in the way (2x on tail)', f
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('up');
 		done();
 	};
 
@@ -262,7 +262,7 @@ it('should eat very dangerous food if about to die and there is a chance of livi
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('up');
 		done();
 	};
 
@@ -279,7 +279,7 @@ it('should make a move to stay alive even if death in a couple turns is unavoida
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('up');
 		done();
 	};
 
@@ -295,7 +295,7 @@ it('should recognise the tail will make space for it to move', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('up');
 		done();
 	};
 
@@ -311,7 +311,7 @@ it('should not get food when tail growth will kill it', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
 		done();
 	};
 
@@ -327,7 +327,7 @@ it('should eat food that is not actually dangerous if low on health', function(d
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(JSON.parse(res.text)).to.have.property('move').with.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('down');
 		done();
 	};
 
