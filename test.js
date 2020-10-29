@@ -334,7 +334,7 @@ it('should eat food that is not actually dangerous if low on health', function(d
 	testHelper.sendMoveRequest(url, requestBody, responseHandler);
 });
 
-it('should handle start request', function(done) {
+it('should handle end request', function(done) {
 
 
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(11, 11);
