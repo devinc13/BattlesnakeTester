@@ -12,7 +12,7 @@ var url = testHelper.getUrl();
 it('should handle start request', function(done) {
 
 
-	var requestBody = requestBodyBuilder.getEmptyRequestBody(25, 15);
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
@@ -332,4 +332,21 @@ it('should eat food that is not actually dangerous if low on health', function(d
 	};
 
 	testHelper.sendMoveRequest(url, requestBody, responseHandler);
+});
+
+it('should handle start request', function(done) {
+
+
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(11, 11);
+
+	var responseHandler = function (err, res) {
+		testHelper.checkForGoodResponse(err, res);
+		done();
+	};
+
+    chai.request(url)
+		.post('/end')
+		.send(requestBody)
+		.end(responseHandler);
+
 });
