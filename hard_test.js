@@ -22,7 +22,7 @@ it('should eat dangerous food to not die at 2hp', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('right');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('right');
 		done();
 	};
 
@@ -40,7 +40,7 @@ it('should avoid very dangerous food if at full health', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('right');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('right');
 		done();
 	};
 
