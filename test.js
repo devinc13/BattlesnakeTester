@@ -28,7 +28,7 @@ it('should handle start request', function(done) {
 
 it('should return a move (any move)', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(15, 15);
-	requestBodyBuilder.addFood(requestBody, 7, 19);
+	requestBodyBuilder.addFood(requestBody, 7, 7);
 	requestBodyBuilder.addSnake(requestBody, [{"x": 7, "y": 8}, {"x": 6, "y": 8}, {"x": 5, "y": 8}]);
 	requestBodyBuilder.addYou(requestBody, [{"x": 11, "y": 11}, {"x": 11, "y": 12}, {"x": 11, "y": 13}]);
 	requestBodyBuilder.printBoard(requestBody);
