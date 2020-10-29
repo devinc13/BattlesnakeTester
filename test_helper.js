@@ -9,7 +9,7 @@ function checkForGoodResponse(err, res) {
 }
 
 function sendMoveRequest(url, requestBody, responseHandler) {
-	s.sleep(0.5);
+	s.sleep(1);
 	chai.request(url)
 		.post('/move')
 		.send(requestBody)
