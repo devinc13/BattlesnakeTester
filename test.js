@@ -12,7 +12,7 @@ var url = testHelper.getUrl();
 it('should handle start request', function(done) {
 
 
-	var requestBody = requestBodyBuilder.getEmptyRequestBody(25, 15);
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
@@ -28,14 +28,14 @@ it('should handle start request', function(done) {
 
 it('should return a move (any move)', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(15, 15);
-	requestBodyBuilder.addFood(requestBody, 7, 19);
+	requestBodyBuilder.addFood(requestBody, 7, 7);
 	requestBodyBuilder.addSnake(requestBody, [{"x": 7, "y": 8}, {"x": 6, "y": 8}, {"x": 5, "y": 8}]);
 	requestBodyBuilder.addYou(requestBody, [{"x": 11, "y": 11}, {"x": 11, "y": 12}, {"x": 11, "y": 13}]);
 	requestBodyBuilder.printBoard(requestBody);
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move');
+		expect(JSON.parse(res.text)).to.have.property('move');
 		done();
 	};
 
@@ -51,7 +51,7 @@ it('should handle small spaces (flood fill)', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('right');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('right');
 		done();
 	};
 
@@ -68,7 +68,7 @@ it('should handle small spaces V2 (flood fill)', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('left');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('left');
 		done();
 	};
 
@@ -88,7 +88,7 @@ it('should eat food beside you at 1hp', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('left');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('left');
 		done();
 	};
 
@@ -108,7 +108,7 @@ it('should eat food beside you at 1hp with enemy snake around', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('left');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('left');
 		done();
 	};
 
@@ -125,7 +125,7 @@ it('should not move into a space behind a tail that is about to grow', function(
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.not.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
 		done();
 	};
 
@@ -141,8 +141,8 @@ it('should not kill itself when scared of another shorter snake', function(done)
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.not.equal('up');
-		expect(res.body).to.have.property('move').with.not.equal('left');		
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('left');		
 		done();
 	};
 
@@ -158,8 +158,8 @@ it('should not kill itself when scared of another longer snake', function(done) 
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.not.equal('up');
-		expect(res.body).to.have.property('move').with.not.equal('left');		
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('left');		
 		done();
 	};
 
@@ -175,7 +175,7 @@ it('should avoid the head of another longer snake', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('left');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('left');
 		done();
 	};
 
@@ -193,7 +193,7 @@ it('should avoid dead end food', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('down');
 		done();
 	};
 
@@ -209,7 +209,7 @@ it('should avoid a corner when growing tail will get in the way (2x on tail)', f
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('up');
 		done();
 	};
 
@@ -227,7 +227,7 @@ it('should not take a dangerous move at the start', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('left');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('left');
 		done();
 	};
 
@@ -246,7 +246,7 @@ it('should avoid the head of a longer snake', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('left');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('left');
 		done();
 	};
 
@@ -262,7 +262,7 @@ it('should eat very dangerous food if about to die and there is a chance of livi
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('up');
 		done();
 	};
 
@@ -279,7 +279,7 @@ it('should make a move to stay alive even if death in a couple turns is unavoida
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('up');
 		done();
 	};
 
@@ -295,7 +295,7 @@ it('should recognise the tail will make space for it to move', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.not.equal('down');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('up');
 		done();
 	};
 
@@ -311,7 +311,7 @@ it('should not get food when tail growth will kill it', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.not.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.not.equal('down');
 		done();
 	};
 
@@ -327,9 +327,26 @@ it('should eat food that is not actually dangerous if low on health', function(d
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('up');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('down');
 		done();
 	};
 
 	testHelper.sendMoveRequest(url, requestBody, responseHandler);
+});
+
+it('should handle end request', function(done) {
+
+
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(11, 11);
+
+	var responseHandler = function (err, res) {
+		testHelper.checkForGoodResponse(err, res);
+		done();
+	};
+
+    chai.request(url)
+		.post('/end')
+		.send(requestBody)
+		.end(responseHandler);
+
 });

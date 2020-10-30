@@ -3,7 +3,12 @@ function getEmptyRequestBody(width = 20, height = 20, turn = 0) {
 	var body = {};
 
 	body["game"] = {
-	    "id": 1,
+		"id": 1,
+		"ruleset": {
+			"name": "standard",
+			"version": "v.1.2.3"
+		  },
+		  "timeout": 500
 	}
 
 	body["turn"] = turn;
@@ -11,7 +16,8 @@ function getEmptyRequestBody(width = 20, height = 20, turn = 0) {
 	body["board"] = {
 		"height": width,
 	    "width": height,
-	    "food": [],
+		"food": [],
+		"hazards": [],
 	    "snakes": [],
 	}
 
@@ -42,8 +48,13 @@ function makeRandomString() {
 
 function addSnake(body, snakeCoords, health = 100, name = makeRandomString(), id = makeRandomString()) {
 	var snakeBody = [];
-
+	var head = {};
 	for (var i = 0; i < snakeCoords.length; i++) {
+		if (i == 0){
+			head = {
+				"x": snakeCoords[i].x,
+				"y": snakeCoords[i].y };
+		}
 		var point = {
 			"x": snakeCoords[i].x,
 			"y": snakeCoords[i].y
@@ -54,9 +65,14 @@ function addSnake(body, snakeCoords, health = 100, name = makeRandomString(), id
 
 	var snake = {
 		"body": snakeBody,
+		"length": snakeCoords.length,
 		"health": health,
 		"name": name,
 		"id": id,
+		"head": head,
+		"latency": 10,
+		"squad": "",
+		"shout": "",
 	};
 
 	body["board"]["snakes"].push(snake);
@@ -67,7 +83,13 @@ function addYou(body, snakeCoords, health = 100, name = makeRandomString(), id =
 	addSnake(body, snakeCoords, health, name, id);
 
 	var yourBody = [];
+	var head = {};
 	for (var i = 0; i < snakeCoords.length; i++) {
+		if (i == 0){
+			head = {
+				"x": snakeCoords[i].x,
+				"y": snakeCoords[i].y };
+		}
 		var point = {
 			"x": snakeCoords[i].x,
 			"y": snakeCoords[i].y
@@ -78,9 +100,14 @@ function addYou(body, snakeCoords, health = 100, name = makeRandomString(), id =
 
 	var yourSnake = {
 		"body": yourBody,
+		"length": snakeCoords.length,
 		"health": health,
 		"name": name,
 		"id": id,
+		"head": head,
+		"latency": 10,
+		"squad": "",
+		"shout": "",
 	};
 
 	body["you"] = yourSnake;

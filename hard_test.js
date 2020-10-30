@@ -9,6 +9,23 @@ const testHelper = require('./test_helper');
 var url = testHelper.getUrl();
 
 
+it('should handle start request', function(done) {
+
+
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
+
+	var responseHandler = function (err, res) {
+		testHelper.checkForGoodResponse(err, res);
+		done();
+	};
+
+    chai.request(url)
+		.post('/start')
+		.send(requestBody)
+		.end(responseHandler);
+
+});
+
 // There is a path to get back out after eating the food. Some snakes decide there isn't, and don't eat the food.
 it('should eat dangerous food to not die at 2hp', function(done) {
 	var requestBody = requestBodyBuilder.getEmptyRequestBody(20, 20);
@@ -22,7 +39,7 @@ it('should eat dangerous food to not die at 2hp', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('right');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('right');
 		done();
 	};
 
@@ -40,9 +57,27 @@ it('should avoid very dangerous food if at full health', function(done) {
 
 	var responseHandler = function (err, res) {
 		testHelper.checkForGoodResponse(err, res);
-		expect(res.body).to.have.property('move').with.equal('right');
+		expect(JSON.parse(res.text)).to.have.property('move').with.equal('right');
 		done();
 	};
 
 	testHelper.sendMoveRequest(url, requestBody, responseHandler);
+});
+
+
+it('should handle end request', function(done) {
+
+
+	var requestBody = requestBodyBuilder.getEmptyRequestBody(20,20);
+
+	var responseHandler = function (err, res) {
+		testHelper.checkForGoodResponse(err, res);
+		done();
+	};
+
+    chai.request(url)
+		.post('/end')
+		.send(requestBody)
+		.end(responseHandler);
+
 });
