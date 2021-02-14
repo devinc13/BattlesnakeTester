@@ -2,17 +2,22 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 var expect = chai.expect;
-
+var s = require('sleep');
 function checkForGoodResponse(err, res) {
 	expect(err).to.be.null;
 	expect(res).to.have.status(200);
 }
 
 function sendMoveRequest(url, requestBody, responseHandler) {
+	s.sleep(1);
 	chai.request(url)
 		.post('/move')
 		.send(requestBody)
-		.end(responseHandler);
+		.end(function(err,res){
+			console.log(res.text);
+			responseHandler(err,res);
+	});
+
 }
 
 function getUrl() {
